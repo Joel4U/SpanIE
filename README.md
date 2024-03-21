@@ -18,7 +18,10 @@ python==3.8.0
 
 Train and evaluate model with default configure.（RoBERTa-Large, Learing rate 1e-5）
 
+
+```bash
 python transformers_trainer.py --dataset scierc
+```
 
 # Results with Default Configure on Test Set
 | Dataset | NER (F1)	 | Relation (F1) |
