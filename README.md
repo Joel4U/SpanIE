@@ -31,6 +31,6 @@ python transformers_trainer.py --dataset scierc
 | SciERC   | 74.25   | 49.90（best）   |
 | NYT24(NYT)   | 内容5   | 内容6   |
 | NYT29   | 内容5   | 内容6   |
-| WebNLG   | 内容5   | 内容6   |
+| WebNLG   | 97.94   | 92.64(best)|
 | ACE2004   | 内容5   | 内容6   |
 | ACE2005   | 92.81  | 66.96   |
