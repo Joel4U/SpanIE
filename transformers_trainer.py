@@ -9,34 +9,28 @@ from tqdm import tqdm
 from src.data import TransformersNERREDataset
 from torch.utils.data import DataLoader
 from transformers import set_seed, AutoTokenizer
-import logging
+from logger import get_logger
+from termcolor import colored
 
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
-    datefmt="%m/%d/%Y %H:%M:%S",
-    level=logging.INFO,
-)
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = get_logger()
 
 def parse_arguments(parser):
     ###Training Hyperparameters
     parser.add_argument('--device', type=str, default="cuda:3", choices=['cpu', 'cuda:0', 'cuda:1', 'cuda:2'],
                         help="GPU/CPU devices")
     parser.add_argument('--seed', type=int, default=42, help="random seed")
-    parser.add_argument('--dataset', type=str, default="scierc")
+    parser.add_argument('--dataset', type=str, default="webnlg")
     parser.add_argument('--optimizer', type=str, default="adamw", help="This would be useless if you are working with transformers package")
     parser.add_argument('--learning_rate', type=float, default=1e-5, help="usually we use 0.01 for sgd but 2e-5 working with bert/roberta")
     parser.add_argument('--momentum', type=float, default=0.0)
     parser.add_argument('--l2', type=float, default=1e-8)
     parser.add_argument('--lr_decay', type=float, default=0)
-    parser.add_argument('--batch_size', type=int, default=20, help="default batch size is 10 (works well for normal neural crf), here default 30 for bert-based crf")
-    parser.add_argument('--num_epochs', type=int, default=1000, help="Usually we set to 100.")
+    parser.add_argument('--batch_size', type=int, default=30, help="default batch size is 10 (works well for normal neural crf), here default 30 for bert-based crf")
+    parser.add_argument('--num_epochs', type=int, default=400, help="Usually we set to 100.")
     parser.add_argument('--train_num', type=int, default=-1, help="-1 means all the data")
     parser.add_argument('--dev_num', type=int, default=-1, help="-1 means all the data")
     parser.add_argument('--test_num', type=int, default=-1, help="-1 means all the data")
-    parser.add_argument('--max_no_incre', type=int, default=80, help="early stop when there is n epoch not increasing on dev")
+    parser.add_argument('--max_no_incre', type=int, default=40, help="early stop when there is n epoch not increasing on dev")
     parser.add_argument('--max_grad_norm', type=float, default=1.0, help="The maximum gradient norm, if <=0, means no clipping, usually we don't use clipping for normal neural ncrf")
     parser.add_argument('--fp16', type=int, choices=[0, 1], default=0, help="use 16-bit floating point precision instead of 32-bit")
 
@@ -46,13 +40,12 @@ def parse_arguments(parser):
     parser.add_argument('--dropout', type=float, default=0.5, help="dropout for embedding")
 
     parser.add_argument('--embedder_type', type=str, default="roberta-large", help="you can use 'bert-base-uncased' and so on")
-    parser.add_argument('--add_iobes_constraint', type=int, default=0, choices=[0,1], help="add IOBES constraint for transition parameters to enforce valid transitions")
+    # parser.add_argument('--add_iobes_constraint', type=int, default=0, choices=[0,1], help="add IOBES constraint for transition parameters to enforce valid transitions")
 
-    parser.add_argument("--print_detail_f1", type= int, default= 0, choices= [0, 1], help= "Open and close printing f1 scores for each tag after each evaluation epoch")
-    parser.add_argument("--earlystop_atr", type=str, default="micro", choices= ["micro", "macro"], help= "Choose between macro f1 score and micro f1 score for early stopping evaluation")
+    # parser.add_argument("--print_detail_f1", type= int, default= 0, choices= [0, 1], help= "Open and close printing f1 scores for each tag after each evaluation epoch")
+    # parser.add_argument("--earlystop_atr", type=str, default="micro", choices= ["micro", "macro"], help= "Choose between macro f1 score and micro f1 score for early stopping evaluation")
 
     parser.add_argument('--mode', type=str, default="train", choices=["train", "test"], help="training model or test mode")
-    parser.add_argument('--test_file', type=str, default="data/conll2003_sample/test.txt", help="test file for test mode, only applicable in test mode")
 
     args = parser.parse_args()
     for k in args.__dict__:
@@ -63,17 +56,16 @@ def parse_arguments(parser):
 def train_model(config: Config, epoch: int, train_loader: DataLoader, dev_loader: DataLoader, test_loader: DataLoader):
     ### Data Processing Info
     train_num = len(train_loader)
-    logger.info(f"[Data Info] number of training instances: {train_num}")
-
-    logger.info(f"[Model Info]: Working with transformers package from huggingface with {config.embedder_type}")
-    logger.info(f"[Optimizer Info]: You should be aware that you are using the optimizer from huggingface.")
-    logger.info(f"[Optimizer Info]: Change the optimier in transformers_util.py if you want to make some modifications.")
+    print(f"[Data Info] number of training instances: {train_num}")
+    print(colored(f"[Model Info]: Working with transformers package from huggingface with {config.embedder_type}", 'red'))
+    print(colored(f"[Optimizer Info]: You should be aware that you are using the optimizer from huggingface.", 'red'))
+    print(colored(f"[Optimizer Info]: Change the optimier in transformers_util.py if you want to make some modifications.", 'red'))
     model = TransformersCRF(config)
     optimizer, scheduler = get_huggingface_optimizer_and_scheduler(model=model, learning_rate=config.learning_rate,
                                                                    num_training_steps=len(train_loader) * epoch,
                                                                    weight_decay=0.0, eps = 1e-8, warmup_step=0)
-    logger.info(f"[Optimizer Info] Modify the optimizer info as you need.")
-    logger.info(optimizer)
+    print(colored(f"[Optimizer Info] Modify the optimizer info as you need.", 'red'))
+    print(optimizer)
 
     model.to(config.device)
 
@@ -81,7 +73,7 @@ def train_model(config: Config, epoch: int, train_loader: DataLoader, dev_loader
     best_test = [-1, 0]
 
     no_incre_dev = 0
-    logger.info(f"[Train Info] Start training, you have set to stop if performace not increase for {config.max_no_incre} epochs")
+    print(colored(f"[Train Info] Start training, you have set to stop if performace not increase for {config.max_no_incre} epochs",'red'))
     for i in tqdm(range(1, epoch + 1), desc="Epoch"):
         epoch_loss = 0
         start_time = time.time()
@@ -175,7 +167,7 @@ def evaluate_model(config: Config, model: TransformersCRF, data_loader: DataLoad
     rel_f = (total_rel_dict['f'] + last_batch_rel_f) / total_batches * 100
     logger.info(f"[{name} set Total] NER Prec.: {ner_p:.2f}, Rec.: {ner_r:.2f}, Micro F1: {ner_f:.2f}\r")
     logger.info(f"[{name} set Total] REL Prec.: {rel_p:.2f}, Rec.: {rel_r:.2f}, Micro F1: {rel_f:.2f}")
-    return [ner_p, ner_r, ner_f]
+    return (ner_f + rel_f)/2
 
 
 def main():
@@ -183,9 +175,9 @@ def main():
     opt = parse_arguments(parser)
     set_seed(opt.seed)
     conf = Config(opt)
-    logger.info(f"[Data Info] Tokenizing the instances using '{conf.embedder_type}' tokenizer")
+    # logger.info(f"[Data Info] Tokenizing the instances using '{conf.embedder_type}' tokenizer")
     tokenizer = AutoTokenizer.from_pretrained(conf.embedder_type, add_prefix_space=True, use_fast=True)
-    logger.info(f"[Data Info] Reading dataset from: \n{conf.train_file}\n{conf.dev_file}\n{conf.test_file}")
+    print(colored(f"[Data Info] Reading dataset from: \n{conf.train_file}\n{conf.dev_file}\n{conf.test_file}", "blue"))
     train_dataset = TransformersNERREDataset(conf.train_file, tokenizer, is_train=True)
     conf.ner_label = train_dataset.ner_label
     conf.rel_label = train_dataset.re_label
