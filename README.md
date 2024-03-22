@@ -29,7 +29,7 @@ python transformers_trainer.py --dataset scierc
 | Wet Lab Protocols   | 内容2   | 内容3   |
 | SciERC   | 75.76（best）   | 47.02   |
 | SciERC   | 74.25   | 49.90（best）   |
-| NYT24   | 内容5   | 内容6   |
+| NYT24(NYT)   | 内容5   | 内容6   |
 | NYT29   | 内容5   | 内容6   |
 | WebNLG   | 内容5   | 内容6   |
 | ACE2004   | 内容5   | 内容6   |
