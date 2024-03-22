@@ -1,7 +1,7 @@
 # SpanIE
 A span-based joint named entity recognition (NER) and relation extraction model with Roberta
 
-This code repository has been restructured based on [JointIE](https://github.com/JiachengLi1995/JointIE/) for the purpose of dependency transition models. It mainly references the following models and code:
+This code repository has been restructured based on [JointIE](https://github.com/JiachengLi1995/JointIE/) for the purpose of dependency transition models. It mainly references the following models and codes:
 
 Generalizing Natural Language Analysis through Span-relation Representations (ACL2020). [paper] (https://arxiv.org/abs/1911.03822)
 
