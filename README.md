@@ -27,7 +27,8 @@ python transformers_trainer.py --dataset scierc
 | Dataset | NER (F1)	 | Relation (F1) |
 |---------|---------|---------|
 | Wet Lab Protocols   | 内容2   | 内容3   |
-| SciERC   | 内容5   | 内容6   |
+| SciERC   | 75.76（best）   | 47.02   |
+| SciERC   | 74.25   | 49.90（best）   |
 | NYT24   | 内容5   | 内容6   |
 | NYT29   | 内容5   | 内容6   |
 | WebNLG   | 内容5   | 内容6   |
