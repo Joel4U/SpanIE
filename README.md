@@ -1,5 +1,5 @@
 # SpanIE
-A span-based joint named entity recognition (NER) and relation extraction model with Roberta
+A span-based joint named entity recognition (NER) and relation extraction model with RoBERTa
 
 This code repository has been restructured based on [JointIE](https://github.com/JiachengLi1995/JointIE/) for the purpose of dependency transition models. It mainly references the following models and codes:
 
