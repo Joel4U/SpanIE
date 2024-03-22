@@ -33,4 +33,4 @@ python transformers_trainer.py --dataset scierc
 | NYT29   | 内容5   | 内容6   |
 | WebNLG   | 内容5   | 内容6   |
 | ACE2004   | 内容5   | 内容6   |
-| ACE2005   | 内容5   | 内容6   |
+| ACE2005   | 92.81  | 66.96   |
