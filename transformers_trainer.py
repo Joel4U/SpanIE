@@ -107,14 +107,16 @@ def train_model(config: Config, epoch: int, train_loader: DataLoader, dev_loader
         logger.info(f"Epoch {i}: {epoch_loss:.5f}, Time is {(end_time - start_time):.2f}s")
 
         model.eval()
-        dev_metrics = evaluate_model(config, model, dev_loader, "dev")
-        test_metrics = evaluate_model(config, model, test_loader, "test")
-        if dev_metrics[2] > best_dev[0]:
-            logger.info(f"saving the best model with best dev f1 score {dev_metrics[2]}")
+        model.metric_reset()
+        dev_f1 = evaluate_model(config, model, dev_loader, "dev")
+        model.metric_reset()
+        test_f1 = evaluate_model(config, model, test_loader, "test")
+        if dev_f1 > best_dev[0]:
+            # logger.info(f"saving the best model with best dev f1 score {dev_metrics[2]}")
             no_incre_dev = 0
-            best_dev[0] = dev_metrics[2]
+            best_dev[0] = dev_f1
             best_dev[1] = i
-            best_test[0] = test_metrics[2]
+            best_test[0] =test_f1
             best_test[1] = i
         else:
             no_incre_dev += 1
