@@ -140,6 +140,10 @@ class TransformersCRF(nn.Module):
             self.re_prf(span_pair_pred, span_pair_labels, span_pair_mask.long(), recall=recall, bucket_value=span_pair_len)
             return self.ner_prf, self.re_prf
 
+    def metric_reset(self):
+        self.ner_prf.reset()
+        self.re_prf.reset()
+        
     def prob_mask(self,
                   prob: torch.FloatTensor,
                   mask: torch.FloatTensor,
