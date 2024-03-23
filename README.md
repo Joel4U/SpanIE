@@ -26,8 +26,8 @@ python transformers_trainer.py --dataset scierc
 # Results with Default Configure on Test Set
 | Dataset | NER (F1)	 | Relation (F1) |
 |---------|---------|---------|
-| SciERC   | 75.76（best）   | 47.02   |
-| SciERC   | 74.25   | 49.90（best）   |
+| SciERC   | 70.98（best）   | 46.19   |
+| SciERC   | 69.87   | 47.27（best）   |
 | NYT24(NYT)   | 内容5   | 内容6   |
 | NYT29   | 内容5   | 内容6   |
 | WebNLG   | 97.94   | 92.64(best)|
