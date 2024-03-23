@@ -33,4 +33,6 @@ python transformers_trainer.py --dataset scierc
 | NYT29   | 内容5   | 内容6   |
 | WebNLG   | 97.94   | 92.64(best)|
 | ACE2004   | 内容5   | 内容6   |
-| ACE2005   | 92.81  | 66.96   |
+| ACE2005   | 90.12(best)  | 62.43   |
+| ACE2005   | 89.51  | 64.84(best)   |
+
