@@ -33,7 +33,8 @@ python transformers_trainer.py --dataset scierc
 | NYT29   | 内容6   | 内容6   |
 | WebNLG   | 97.94   | 92.64(best)|
 | ACE2004_fold01   | 内容5   | 内容6   |
-| ACE2004_fold02   | 内容5   | 内容6   |
+| ACE2004_fold02   | 90.11(best)   | 51.11   |
+| ACE2004_fold02   | 88.04   | 53.98(best)   |
 | ACE2004_fold03   | 内容5   | 内容6   |
 | ACE2004_fold04   | 内容5   | 内容6   |
 | ACE2004_fold05   | 内容5   | 内容6   |
