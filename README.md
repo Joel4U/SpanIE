@@ -28,8 +28,8 @@ python transformers_trainer.py --dataset scierc
 |---------|---------|---------|
 | SciERC   | 70.98（best）   | 46.19   |
 | SciERC   | 69.87   | 47.27（best）   |
-| NYT24(NYT)   | 内容5   | 内容6   |
-| NYT29   | 内容5   | 内容6   |
+| NYT24(NYT)   | 96.52（best）   | 84.90   |
+| NYT29   | 96.21   | 85.06（best）   |
 | WebNLG   | 97.94   | 92.64(best)|
 | ACE2004_fold01   | 内容5   | 内容6   |
 | ACE2004_fold02   | 内容5   | 内容6   |
