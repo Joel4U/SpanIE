@@ -72,12 +72,12 @@ class TransformersNERREDataset(Dataset):
             record["sentence_end_index"] = [record["sentence_start_index"][i] + len(record["sentences"][i]) for i in
                                           range(n_sentences)]
             for sentence_group_nr in range(len(record["sentence_groups"])):
-                if len(record["sentence_groups"][sentence_group_nr]) > 300:
-                    record["sentence_groups"][sentence_group_nr] = line["sentences"][sentence_group_nr]
+                if len(record["sentence_groups"][sentence_group_nr]) > 400:
+                    # record["sentence_groups"][sentence_group_nr] = line["sentences"][sentence_group_nr]
                     record["sentence_start_index"][sentence_group_nr] = 0
                     record["sentence_end_index"][sentence_group_nr] = len(record["sentences"][sentence_group_nr])
-                    if len(record["sentence_groups"][sentence_group_nr]) > 300:
-                        warnings.warn("Sentence with > 300 words; BERT may truncate.")
+                    if len(record["sentence_groups"][sentence_group_nr]) > 400:
+                        warnings.warn("Sentence with > 400 words; BERT may truncate.")
 
             zipped = zip(record["sentences"], record["ner"], record["relations"], record["sentence_groups"],
                          record["sentence_start_index"], record["sentence_end_index"])
